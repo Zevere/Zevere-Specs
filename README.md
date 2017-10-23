@@ -1,12 +1,12 @@
-# Veer
+# zVeer
 
 Task Management Solution
 
 ## Overview
 
-Veer is s more than a ToDo list or a reminder app. The idea of a task manager app is simple and easy to understand. This makes it a good platform to build on top of.
+zVeer is more than a ToDo list or a reminder app. The idea of a task manager app is simple and easy to understand. This makes it a good platform to build on top of.
 
-Veer project started so its contributors learn new technologies and challenges in implementing such solutions.
+zVeer project started so its contributors learn new technologies and challenges in implementing such solutions.
 
 ## Roadmap
 
@@ -35,6 +35,6 @@ Veer project started so its contributors learn new technologies and challenges i
 - Voice enable bots
 - IoT
 
-## Contribution
+## Contributions
 
 All contributions are welcome. You can easily ask to join and let us know the things you would like to work on.
