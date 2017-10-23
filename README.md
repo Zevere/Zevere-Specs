@@ -4,7 +4,7 @@ Task Management Solution
 
 ## Overview
 
-**Veer** is more than a ToDo list or a reminder app. The idea of a task manager app is simple and easy to understand.
+Veer is s more than a ToDo list or a reminder app. The idea of a task manager app is simple and easy to understand. This makes it a good platform to build on top of.
 
 Veer project started so its contributors learn new technologies and challenges in implementing such solutions.
 
@@ -34,3 +34,7 @@ Veer project started so its contributors learn new technologies and challenges i
 - Chat bots on more platforms
 - Voice enable bots
 - IoT
+
+## Contribution
+
+All contributions are welcome. You can easily ask to join and let us know the things you would like to work on.
