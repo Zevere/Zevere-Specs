@@ -37,6 +37,8 @@ Here are the general expected zVeer error codes based on HTTP status code in the
   - `zv.error.invalid`: Validation errors. In this case, payload contains the `validation_errors` array.
 - `404`:
   - `zv.error.not-found`: Resource does not exist.
+- `415`:
+  - `zv.error.not-supported`: Media type is not supported for this endpoint and method.
 - `500`:
   - `zv.error.fault`: Server failed to process the request.
 
