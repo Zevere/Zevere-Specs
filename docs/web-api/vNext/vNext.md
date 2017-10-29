@@ -5,6 +5,7 @@
   - [Errors](#errors)
   - [Endpoints](#endpoints)
     - [`POST /zv/users`](#post-zvusers)
+    - [`HEAD /zv/users/{user_id}`](#head-zvusersuser_id)
     - [`GET /zv/users/{user_id}`](#get-zvusersuser_id)
     - [`PATCH /zv/users/{user_id}`](#patch-zvusersuser_id)
     - [`DELETE /zv/users/{user_id}`](#delete-zvusersuser_id)
@@ -50,6 +51,15 @@ Create a new user
   - `204` (if `application/vnd.zv.empty` media type requested): User created
   - `409`: A user with the same username already exists
 
+#### `HEAD /zv/users/{user_id}`
+
+Check existence of a user by ID
+
+- Path Parameters:
+  - `user_id`: id of the user
+- Responses:
+  - `200`: User exists
+
 #### `GET /zv/users/{user_id}`
 
 Get a user by ID
@@ -57,12 +67,10 @@ Get a user by ID
 - Path Parameters:
   - `user_id`: id of the user
 - Expectable Response Media Types:
-  - [`application/vnd.zv.empty`](#applicationvndzvempty)
   - [`application/vnd.zv.user.pretty+json`](#applicationvndzvuserprettyjson)
   - [`application/vnd.zv.user.full+json`](#applicationvndzvuserfulljson)
 - Responses:
   - `200`
-  - `204` (if `application/vnd.zv.empty` media type requested): User exists
 
 #### `PATCH /zv/users/{user_id}`
 
@@ -78,7 +86,7 @@ Partially update user information
   - [`application/vnd.zv.user.full+json`](#applicationvndzvuserfulljson)
 - Responses:
   - `200`: User info updated
-  - `204` (if `application/vnd.zv.empty` media type requested): User info updated.
+  - `204` (if `application/vnd.zv.empty` media type requested): User info updated
 
 #### `DELETE /zv/users/{user_id}`
 
