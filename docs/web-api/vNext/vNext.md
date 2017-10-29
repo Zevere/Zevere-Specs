@@ -9,8 +9,14 @@
     - [`GET /zv/users/{user_id}`](#get-zvusersuser_id)
     - [`PATCH /zv/users/{user_id}`](#patch-zvusersuser_id)
     - [`DELETE /zv/users/{user_id}`](#delete-zvusersuser_id)
+    - [`POST /zv/users/{user_id}/tasks`](#post-zvusersuser_idtasks)
+    - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
+    - [`GET /zv/users/{user_id}/tasks/{task_id}`](#get-zvusersuser_idtaskstask_id)
+    - [`PUT /zv/users/{user_id}/tasks/{task_id}`](#put-zvusersuser_idtaskstask_id)
+    - [`DELETE /zv/users/{user_id}/tasks/{task_id}`](#delete-zvusersuser_idtaskstask_id)
 - [Media Types](#media-types)
   - [User](#user)
+  - [Task](#task)
   - [PartialUpdate](#partialupdate)
   - [Error](#error)
   - [Miscellaneous](#miscelaneous)
@@ -29,6 +35,8 @@ Here are the general expected zVeer error codes based on HTTP status code in the
 
 - `400`:
   - `zv.error.invalid`: Validation errors. In this case, payload contains the `validation_errors` array.
+- `404`:
+  - `zv.error.not-found`: Resource does not exist.
 - `500`:
   - `zv.error.fault`: Server failed to process the request.
 
@@ -47,7 +55,7 @@ Create a new user
   - [`application/vnd.zv.user.pretty+json`](#applicationvndzvuserprettyjson)
   - [`application/vnd.zv.user.full+json`](#applicationvndzvuserfulljson)
 - Responses:
-  - `200`: User created
+  - `201`: User created
   - `204` (if `application/vnd.zv.empty` media type requested): User created
   - `409`: A user with the same username already exists
 
@@ -58,7 +66,7 @@ Check existence of a user by ID
 - Path Parameters:
   - `user_id`: id of the user
 - Responses:
-  - `200`: User exists
+  - `204`: User exists
 
 #### `GET /zv/users/{user_id}`
 
@@ -85,7 +93,7 @@ Partially update user information
   - [`application/vnd.zv.user.pretty+json`](#applicationvndzvuserprettyjson)
   - [`application/vnd.zv.user.full+json`](#applicationvndzvuserfulljson)
 - Responses:
-  - `200`: User info updated
+  - `202`: User info updated
   - `204` (if `application/vnd.zv.empty` media type requested): User info updated
 
 #### `DELETE /zv/users/{user_id}`
@@ -96,6 +104,73 @@ Remove a user
   - `user_id`: id of the user
 - Responses:
   - `204`: User removed
+
+#### `POST /zv/users/{user_id}/tasks`
+
+Create a new task for the user
+
+- Path Parameters:
+  - `user_id`: id of the user
+- Acceptable Request Content Types:
+  - [`application/vnd.zv.task.creation+json`](#applicationvndzvtaskcreationjson)
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
+  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
+- Responses:
+  - `201`: Task created
+  - `204` (if `application/vnd.zv.empty` media type requested): Task created
+
+#### `HEAD /zv/users/{user_id}/tasks/{task_id}`
+
+Check existence of a task for user by ID
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `task_id`: id of the task
+- Responses:
+  - `204`: Task exists for that user
+
+#### `GET /zv/users/{user_id}/tasks/{task_id}`
+
+Get a task for user by ID
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `task_id`: id of the task
+- Expectable Response Media Types:
+  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
+  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
+- Responses:
+  - `200`
+
+#### `PUT /zv/users/{user_id}/tasks/{task_id}`
+
+Update or create a task for user with the specified `task_id`
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `task_id`: id of the task
+- Acceptable Request Content Types:
+  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskcreationjson)
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
+  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
+- Responses:
+  - `201`: Task created/updated
+  - `204` (if `application/vnd.zv.empty` media type requested): Task created/updated
+  - `409`: A task with the same id already exists for this user
+
+#### `DELETE /zv/users/{user_id}/tasks/{task_id}`
+
+Remove a task for user
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `task_id`: id of the task
+- Responses:
+  - `204`: Task removed
 
 ## Media Types
 
@@ -128,6 +203,36 @@ Each type might have different representations. Listed below are types, their va
 | passphrase | string | ✔ | Passphrase as clear text |
 | first_name | string | ✔ | User's first name |
 | last_name | string |  | User's last name |
+
+### Task
+
+#### `application/vnd.zv.task.full+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| id | string | ✔ | Task's ID |
+| title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
+| description | string |  | More description for task |
+| created_at | datetime | ✔ | The date and time this task was created in UTC format. |
+| due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after `created_at`. |
+
+#### `application/vnd.zv.task.pretty+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| id | string | ✔ | Task's ID |
+| title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
+| description | string |  | More description for task |
+| is_due | boolean | ✔ | Whether task's due date and time is passed. |
+| due_in | string | | Only if `is_due` is false, contains a user readable representation of the time left such as `2 days 5 minutes`. |
+
+#### `application/vnd.zv.task.creation+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
+| description | string |  | More description for task |
+| due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after the time of making request. |
 
 ### PartialUpdate
 
