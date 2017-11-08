@@ -2,6 +2,8 @@
 
 Simple Task Management Solution. Offers ToDo lists and reminders that you enjoy to __develop__ and __use__.
 
+> Zevere reads like _Severe_ with a _Z_ `\zə-ˈvir\`.
+
 ![Zevere logo](./docs/logo/zevere-squared.png)
 
 ## Overview
