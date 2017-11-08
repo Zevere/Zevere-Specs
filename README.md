@@ -1,16 +1,16 @@
-# zVeer
+# Zevere
 
 Simple Task Management Solution. Offers ToDo lists and reminders that you enjoy to __develop__ and __use__.
 
-![zVeer logo](./docs/logo/zVeer-squared.png)
+![Zevere logo](./docs/logo/zevere-squared.png)
 
 ## Overview
 
-zVeer is more than a ToDo list or a reminder app. The idea of a task manager app is simple and easy to understand. This makes it a good platform to build on top of.
+Zevere is more than a ToDo list or a reminder app. The idea of a task manager app is simple and easy to understand. This makes it a good platform to build on top of.
 
 Build what? Whatever you wish to learn or get experience of and fits into the picture!
 
-zVeer project started so its contributors learn new technologies and overcome challenges in implementing such solutions.
+Zevere project started so its contributors learn new technologies and overcome challenges in implementing such solutions.
 
 ## Road map
 
