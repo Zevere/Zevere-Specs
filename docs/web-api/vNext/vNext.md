@@ -1,4 +1,4 @@
-# zVeer - RESTful Web API
+# Zevere - RESTful Web API
 
 - [Client-Server API](#client-server-api)
   - [Overview](#overview)
@@ -24,7 +24,7 @@ This API is exposed to the clients through a number of endpoints accepting JSON 
 
 In the case of any errors, server's response payload would be of type [`Error`](#error).
 
-Here are the general expected zVeer error codes based on HTTP status code in the response:
+Here are the general expected Zevere error codes based on HTTP status code in the response:
 
 - `400`:
   - `zv.error.invalid`: Validation errors. In this case, payload contains the `validation_errors` array.
