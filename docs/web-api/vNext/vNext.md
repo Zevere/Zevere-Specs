@@ -3,6 +3,8 @@
 - [Client-Server API](#client-server-api)
   - [Overview](#overview)
   - [Errors](#errors)
+  - [Special Formats](#special-formats)
+    - [DateTime](#datetime)
   - [Endpoints](#endpoints)
     - [`POST /zv/users`](#post-zvusers)
     - [`HEAD /zv/users/{user_id}`](#head-zvusersuser_id)
@@ -41,6 +43,12 @@ Here are the general expected Zevere error codes based on HTTP status code in th
   - `zv.error.not-supported`: Media type is not supported for this endpoint and method.
 - `500`:
   - `zv.error.fault`: Server failed to process the request.
+
+### Special Formats
+
+#### DateTime
+
+All datetime values in JSON are strings with a format based on [ISO8601](http://en.wikipedia.org/wiki/ISO_8601). See examples [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString).
 
 ### Endpoints
 
