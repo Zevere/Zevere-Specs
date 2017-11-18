@@ -2,10 +2,13 @@
 
 - [Client-Server API](#client-server-api)
   - [Overview](#overview)
+  - [Authentication](#authentication)
   - [Errors](#errors)
   - [Special Formats](#special-formats)
     - [DateTime](#datetime)
   - [Endpoints](#endpoints)
+    - [`POST /zv/login`](#post-zvlogin)
+    - [`POST /zv/logout`](#post-zvlogout)
     - [`POST /zv/users`](#post-zvusers)
     - [`HEAD /zv/users/{user_id}`](#head-zvusersuser_id)
     - [`GET /zv/users/{user_id}`](#get-zvusersuser_id)
@@ -17,6 +20,7 @@
     - [`PUT /zv/users/{user_id}/tasks/{task_id}`](#put-zvusersuser_idtaskstask_id)
     - [`DELETE /zv/users/{user_id}/tasks/{task_id}`](#delete-zvusersuser_idtaskstask_id)
 - [Media Types](#media-types)
+  - [Login](#login)
   - [User](#user)
   - [Task](#task)
   - [PartialUpdate](#partialupdate)
@@ -28,6 +32,10 @@
 ### Overview
 
 This API is exposed to the clients through a number of endpoints accepting JSON payloads.
+
+### Authentication
+
+Clients can get a Base64 encoded token in login and register process. This token should be provided when necessary as HTTP basic authorization header in the form of `Authorization: Basic {token}`. Requests that require authentication(indicated by _Requires Auth_) and do not have this header, will result in a _401 Unauthorized_ response.
 
 ### Errors
 
@@ -53,6 +61,25 @@ All datetime values in JSON are strings with a format based on [ISO8601](http://
 ### Endpoints
 
 Some Endpoints might accept more than one media types in request and return more than one form of representation in response. You can see the full list [here](#media-types).
+
+#### `POST /zv/login`
+
+Retrieve an auth token
+
+- Acceptable Request Content Types:
+  - [`application/vnd.zv.login.creation+json`](#applicationvndzvlogincreationjson)
+- Expectable Response Media Types:
+  - [`application/vnd.zv.login.token+json`](#applicationvndzvlogintokenjson)
+- Responses:
+  - `200`: Login already exists
+  - `201`: New login created
+
+#### `POST /zv/logout`
+
+Revoke auth token. _Requires Auth_.
+
+- Responses:
+  - `204`: Token is revoked
 
 #### `POST /zv/users`
 
@@ -80,7 +107,7 @@ Check existence of a user by ID
 
 #### `GET /zv/users/{user_id}`
 
-Get a user by ID
+Get a user by ID. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -92,7 +119,7 @@ Get a user by ID
 
 #### `PATCH /zv/users/{user_id}`
 
-Partially update user information
+Partially update user information. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -108,7 +135,7 @@ Partially update user information
 
 #### `DELETE /zv/users/{user_id}`
 
-Remove a user
+Remove user. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -117,7 +144,7 @@ Remove a user
 
 #### `POST /zv/users/{user_id}/tasks`
 
-Create a new task for the user
+Create a new task for the user. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -133,7 +160,7 @@ Create a new task for the user
 
 #### `HEAD /zv/users/{user_id}/tasks/{task_id}`
 
-Check existence of a task for user by ID
+Check existence of a task for user by ID. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -143,7 +170,7 @@ Check existence of a task for user by ID
 
 #### `GET /zv/users/{user_id}/tasks/{task_id}`
 
-Get a task for user by ID
+Get a task for user by ID. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -156,7 +183,7 @@ Get a task for user by ID
 
 #### `PUT /zv/users/{user_id}/tasks/{task_id}`
 
-Update or create a task for user with the specified `task_id`
+Update or create a task for user with the specified `task_id`. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -174,7 +201,7 @@ Update or create a task for user with the specified `task_id`
 
 #### `DELETE /zv/users/{user_id}/tasks/{task_id}`
 
-Remove a task for user
+Remove a task for user. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -185,6 +212,21 @@ Remove a task for user
 ## Media Types
 
 Each type might have different representations. Listed below are types, their various representations, and their custom mime-type names.
+
+### Login
+
+#### `application/vnd.zv.login.creation+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| user_name | string | ✔ | User name |
+| passphrase | string | ✔ | passphrase |
+
+#### `application/vnd.zv.login.token+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| token | string | ✔ | Authentication token |
 
 ### User
 
