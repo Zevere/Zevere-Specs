@@ -23,7 +23,6 @@
   - [Login](#login)
   - [User](#user)
   - [Task](#task)
-  - [PartialUpdate](#partialupdate)
   - [Error](#error)
   - [Miscellaneous](#miscelaneous)
 
@@ -98,7 +97,7 @@ Create a new user
 
 #### `HEAD /zv/users/{user_id}`
 
-Check existence of a user by ID
+Check existence of any user by ID
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -107,7 +106,7 @@ Check existence of a user by ID
 
 #### `GET /zv/users/{user_id}`
 
-Get a user by ID. _Requires Auth_.
+Get any user by ID. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -119,12 +118,12 @@ Get a user by ID. _Requires Auth_.
 
 #### `PATCH /zv/users/{user_id}`
 
-Partially update user information. _Requires Auth_.
+Partially update user information. Send a JSON dictionary of key-value pairs with valid keys: `first_name` and `last_name`. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
 - Acceptable Request Content Types:
-  - [`application/vnd.zv.partial-update+json`](#applicationvndzvpartial-updatejson)
+  - `application/json`
 - Expectable Response Media Types:
   - [`application/vnd.zv.empty`](#applicationvndzvempty)
   - [`application/vnd.zv.user.pretty+json`](#applicationvndzvuserprettyjson)
@@ -285,21 +284,6 @@ Each type might have different representations. Listed below are types, their va
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
 | description | string |  | More description for task |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after the time of making request. |
-
-### PartialUpdate
-
-#### `application/vnd.zv.partial-update+json`
-
-| Name  | Type | Required | Description |
-| -- | :--: | :--: | -- |
-| patches | [`FieldUpdate`](#fieldupdate)[] | ✔ | An array of field updates |
-
-#### FieldUpdate
-
-| Name  | Type | Required | Description |
-| -- | :--: | :--: | -- |
-| field | string | ✔ | Name of the field to be updated |
-| value | string | ✔ | New value for the field |
 
 ### Error
 
