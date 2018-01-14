@@ -118,10 +118,10 @@ Get any user by ID. _Requires Auth_.
 
 #### `PATCH /zv/users/{user_id}`
 
-Partially update user information. Send a JSON dictionary of key-value pairs with valid keys: `first_name` and `last_name`. _Requires Auth_.
+Partially update current authorized user information. Send a JSON dictionary of key-value pairs with valid keys: `first_name` and `last_name`. _Requires Auth_.
 
 - Path Parameters:
-  - `user_id`: id of the user
+  - `user_id`: id of the current authorized user
 - Acceptable Request Content Types:
   - `application/json`
 - Expectable Response Media Types:
@@ -134,16 +134,16 @@ Partially update user information. Send a JSON dictionary of key-value pairs wit
 
 #### `DELETE /zv/users/{user_id}`
 
-Remove user. _Requires Auth_.
+Remove current authorized user. _Requires Auth_.
 
 - Path Parameters:
-  - `user_id`: id of the user
+  - `user_id`: id of the current authorized user
 - Responses:
   - `204`: User removed
 
 #### `POST /zv/users/{user_id}/tasks`
 
-Create a new task for the user. _Requires Auth_.
+Create a new task for current authorized user. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -159,7 +159,7 @@ Create a new task for the user. _Requires Auth_.
 
 #### `HEAD /zv/users/{user_id}/tasks/{task_id}`
 
-Check existence of a task for user by ID. _Requires Auth_.
+Check existence of a task for current authorized user by ID. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -169,7 +169,7 @@ Check existence of a task for user by ID. _Requires Auth_.
 
 #### `GET /zv/users/{user_id}/tasks/{task_id}`
 
-Get a task for user by ID. _Requires Auth_.
+Get a task for current authorized user by ID. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -182,7 +182,7 @@ Get a task for user by ID. _Requires Auth_.
 
 #### `PUT /zv/users/{user_id}/tasks/{task_id}`
 
-Update or create a task for user with the specified `task_id`. _Requires Auth_.
+Update or create a task for current authorized user with the specified `task_id`. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -200,7 +200,7 @@ Update or create a task for user with the specified `task_id`. _Requires Auth_.
 
 #### `DELETE /zv/users/{user_id}/tasks/{task_id}`
 
-Remove a task for user. _Requires Auth_.
+Remove a task for current authorized user. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -281,6 +281,7 @@ Each type might have different representations. Listed below are types, their va
 
 | Name  | Type | Required | Description |
 | -- | :--: | :--: | -- |
+| id | string | | Optional id for the task. If not specified, server will generate one. IDs are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
 | description | string |  | More description for task |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after the time of making request. |
