@@ -15,6 +15,7 @@
     - [`PATCH /zv/users/{user_id}`](#patch-zvusersuser_id)
     - [`DELETE /zv/users/{user_id}`](#delete-zvusersuser_id)
     - [`POST /zv/users/{user_id}/tasks`](#post-zvusersuser_idtasks)
+    - [`GET /zv/users/{user_id}/tasks`](#get-zvusersuser_idtasks)
     - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
     - [`GET /zv/users/{user_id}/tasks/{task_id}`](#get-zvusersuser_idtaskstask_id)
     - [`PUT /zv/users/{user_id}/tasks/{task_id}`](#put-zvusersuser_idtaskstask_id)
@@ -156,6 +157,18 @@ Create a new task for current authorized user. _Requires Auth_.
 - Responses:
   - `201`: Task created
   - `204` (if `application/vnd.zv.empty` media type requested): Task created
+
+#### `GET /zv/users/{user_id}/tasks`
+
+Get all the tasks for current authorized user by ID. Response is a JSON array. _Requires Auth_.
+
+- Path Parameters:
+  - `user_id`: id of the user
+- Expectable Response Media Types:
+  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
+  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
+- Responses:
+  - `200`
 
 #### `HEAD /zv/users/{user_id}/tasks/{task_id}`
 
