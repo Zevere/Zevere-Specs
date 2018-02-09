@@ -7,22 +7,24 @@
   - [Special Formats](#special-formats)
     - [DateTime](#datetime)
   - [Endpoints](#endpoints)
-    - [`POST /zv/login`](#post-zvlogin)
-    - [`POST /zv/logout`](#post-zvlogout)
-    - [`POST /zv/users`](#post-zvusers)
-    - [`HEAD /zv/users/{user_id}`](#head-zvusersuser_id)
-    - [`GET /zv/users/{user_id}`](#get-zvusersuser_id)
-    - [`PATCH /zv/users/{user_id}`](#patch-zvusersuser_id)
+    - [`POST   /zv/login`](#post-zvlogin)
+    - [`POST   /zv/logout`](#post-zvlogout)
+    - [`POST   /zv/users`](#post-zvusers)
+    - [`GET    /zv/users/{user_id}`](#get-zvusersuser_id)
+    - [`PATCH  /zv/users/{user_id}`](#patch-zvusersuser_id)
     - [`DELETE /zv/users/{user_id}`](#delete-zvusersuser_id)
-    - [`POST /zv/users/{user_id}/tasks`](#post-zvusersuser_idtasks)
-    - [`GET /zv/users/{user_id}/tasks`](#get-zvusersuser_idtasks)
+    - [`GET    /zv/users/{user_id}/lists`](#get-zvusersuser_idlists)
+    - [`POST   /zv/users/{user_id}/lists`](#post-zvusersuser_idlists)
+<!--
     - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
     - [`GET /zv/users/{user_id}/tasks/{task_id}`](#get-zvusersuser_idtaskstask_id)
     - [`PUT /zv/users/{user_id}/tasks/{task_id}`](#put-zvusersuser_idtaskstask_id)
     - [`DELETE /zv/users/{user_id}/tasks/{task_id}`](#delete-zvusersuser_idtaskstask_id)
+-->
 - [Media Types](#media-types)
   - [Login](#login)
   - [User](#user)
+  - [Task](#task-list)
   - [Task](#task)
   - [Error](#error)
   - [Miscellaneous](#miscelaneous)
@@ -96,15 +98,6 @@ Create a new user
   - `204` (if `application/vnd.zv.empty` media type requested): User created
   - `409`: A user with the same username already exists
 
-#### `HEAD /zv/users/{user_id}`
-
-Check existence of any user by ID
-
-- Path Parameters:
-  - `user_id`: id of the user
-- Responses:
-  - `204`: User exists
-
 #### `GET /zv/users/{user_id}`
 
 Get any user by ID. _Requires Auth_.
@@ -141,6 +134,35 @@ Remove current authorized user. _Requires Auth_.
   - `user_id`: id of the current authorized user
 - Responses:
   - `204`: User removed
+
+#### `GET /zv/users/{user_id}/lists`
+
+Get all the task lists for current authorized user by ID. Response is a JSON array. _Requires Auth_.
+
+- Path Parameters:
+  - `user_id`: id of the user
+- Expectable Response Media Types:
+  - [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson)
+- Responses:
+  - `200`
+
+#### `POST /zv/users/{user_id}/lists`
+
+Create a new task list for current authorized user. _Requires Auth_.
+
+- Path Parameters:
+  - `user_id`: id of the user
+- Acceptable Request Content Types:
+  - [`application/vnd.zv.list.creation+json`](#applicationvndzvlistcreationjson)
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson)
+- Responses:
+  - `201`: List created
+  - `204` (if `application/vnd.zv.empty` media type requested): List created
+
+<!--
+
 
 #### `POST /zv/users/{user_id}/tasks`
 
@@ -195,21 +217,21 @@ Get a task for current authorized user by ID. _Requires Auth_.
 
 #### `PUT /zv/users/{user_id}/tasks/{task_id}`
 
-Update or create a task for current authorized user with the specified `task_id`. _Requires Auth_.
+Update or create a task for current authorized user with the specified `task_id`. Send a JSON dictionary of key-value pairs with valid keys: `id`, `title`, `description`, `due_by`. They key `id` should only be used for updating an existing task not creating a new one. _Requires Auth_.
 
 - Path Parameters:
   - `user_id`: id of the user
   - `task_id`: id of the task
 - Acceptable Request Content Types:
-  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskcreationjson)
+  - `application/json`
 - Expectable Response Media Types:
   - [`application/vnd.zv.empty`](#applicationvndzvempty)
   - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
   - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
 - Responses:
-  - `201`: Task created/updated
+  - `200`: Task updated
+  - `201`: Task created
   - `204` (if `application/vnd.zv.empty` media type requested): Task created/updated
-  - `409`: A task with the same id already exists for this user
 
 #### `DELETE /zv/users/{user_id}/tasks/{task_id}`
 
@@ -220,6 +242,8 @@ Remove a task for current authorized user. _Requires Auth_.
   - `task_id`: id of the task
 - Responses:
   - `204`: Task removed
+
+ -->
 
 ## Media Types
 
@@ -267,6 +291,27 @@ Each type might have different representations. Listed below are types, their va
 | passphrase | string | ✔ | Passphrase as clear text |
 | first_name | string | ✔ | User's first name |
 | last_name | string |  | User's last name |
+
+### Task List
+
+#### `application/vnd.zv.list.full+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| id | string | ✔ | Task List's ID |
+| title | string | ✔ | A title/summary for list. 140 characters max. |
+| description | string |  | More description for list |
+| created_at | datetime | ✔ | The date and time this task was created in UTC format. |
+| tags | Object | | A JSON dictionary of key-value pairs(string to string). |
+
+#### `application/vnd.zv.list.creation+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| id | string | | Optional id for the task list. If not specified, server will generate one. IDs are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
+| title | string | ✔ | A title/summary for task list. Should be 140 characters or less. |
+| description | string |  | More description for list |
+| tags | Object | | A JSON dictionary of key-value pairs(string to string). |
 
 ### Task
 

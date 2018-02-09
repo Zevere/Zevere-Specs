@@ -1,4 +1,3 @@
-
 # Issue Template
 
 ## Notes

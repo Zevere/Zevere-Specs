@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- `/zv/users/{user_id}/lists` endpoint
+- `Task List` media types
+
+### Removed
+
+- Endpoint `HEAD /zv/users/{user_id}`
+- Endpoint `/zv/users/{user_id}/tasks`
+- Endpoint `/zv/users/{user_id}/tasks/{task_id}`
+
+## [v1-alpha1] - 2018-02-08
+
+### Added
+
 - Authentication section
 - `/zv/login` endpoint
 - `/zv/logout` endpoint

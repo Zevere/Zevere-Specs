@@ -26,25 +26,26 @@ Here are some of them listed:
 
 - RESTful web API
 - Multiple implementations for Data Access layer
-    - SQLite
-    - Cassandra
-    - Postgres XL
+  - SQLite
+  - Mongo
+  - Cassandra
+  - Postgres XL
 - IdentityServer
 - Presentation layer projects
-    - Angular SPA
-    - Telegram bot
-    - ReactJS SPA
-    - Xamarin native mobile apps
-    - UWP Windows app
-    - Electron desktop apps
+  - Angular SPA
+  - Telegram bot
+  - ReactJS SPA
+  - Xamarin native mobile apps
+  - UWP Windows app
+  - Electron desktop apps
 - Micro services on Docker containers
 - Deployment orchestration with Kubernetes
 - Kafka
 - Logging
-    - SeriLog
-    - ELK stack
+  - SeriLog
+  - ELK stack
 - Big Data
-    - Hadoop
+  - Hadoop
 - Chat bots on more platforms
 - Voice enable bots
 - IoT
