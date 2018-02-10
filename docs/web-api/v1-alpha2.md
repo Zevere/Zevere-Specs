@@ -27,6 +27,11 @@
     - [`POST   /zv/users/{user_id}/lists/{list_id}/comments`](#post-zvusersuser_idlistslist_idcomments)
     - [`PATCH  /zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`](#patch-zvusersuser_idlistslist_idcommentscomment_id)
     - [`DELETE /zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`](#delete-zvusersuser_idlistslist_idcommentscomment_id)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tasks`](#get-zvusersuser_idlistslist_idtasks)
+    - [`POST   /zv/users/{user_id}/lists/{list_id}/tasks`](#post-zvusersuser_idlistslist_idtasks)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`](#get-zvusersuser_idlistslist_idtaskstask_id)
+    - [`PUT    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`](#put-zvusersuser_idlistslist_idtaskstask_id)
+    - [`DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`](#delete-zvusersuser_idlistslist_idtaskstask_id)
 
 <!--
     - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
@@ -340,13 +345,26 @@ Redact a comment
 - Responses:
   - `204`
 
-<!--
-#### `POST /zv/users/{user_id}/tasks`
+#### `GET /zv/users/{user_id}/lists/{list_id}/tasks`
 
-Create a new task for current authorized user. _Requires Auth_.
+Get all the tasks in the task list. Response is a JSON array.
 
 - Path Parameters:
   - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Expectable Response Media Types:
+  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
+  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
+- Responses:
+  - `200`
+
+#### `POST /zv/users/{user_id}/lists/{list_id}/tasks`
+
+Create a new task on the list.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
 - Acceptable Request Content Types:
   - [`application/vnd.zv.task.creation+json`](#applicationvndzvtaskcreationjson)
 - Expectable Response Media Types:
@@ -357,47 +375,26 @@ Create a new task for current authorized user. _Requires Auth_.
   - `201`: Task created
   - `204` (if `application/vnd.zv.empty` media type requested): Task created
 
-#### `GET /zv/users/{user_id}/tasks`
+#### `GET /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`
 
-Get all the tasks for current authorized user by ID. Response is a JSON array. _Requires Auth_.
+Get a specific task from task list.
 
 - Path Parameters:
   - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
 - Expectable Response Media Types:
-  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
   - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
 - Responses:
   - `200`
 
-#### `HEAD /zv/users/{user_id}/tasks/{task_id}`
+#### `PUT /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`
 
-Check existence of a task for current authorized user by ID. _Requires Auth_.
-
-- Path Parameters:
-  - `user_id`: id of the user
-  - `task_id`: id of the task
-- Responses:
-  - `204`: Task exists for that user
-
-#### `GET /zv/users/{user_id}/tasks/{task_id}`
-
-Get a task for current authorized user by ID. _Requires Auth_.
+Add new or update existing task of a task list. Send a JSON dictionary of key-value pairs with valid keys: `id`, `title`, `description`, `due_by`, and `tags`.
 
 - Path Parameters:
   - `user_id`: id of the user
-  - `task_id`: id of the task
-- Expectable Response Media Types:
-  - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
-  - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
-- Responses:
-  - `200`
-
-#### `PUT /zv/users/{user_id}/tasks/{task_id}`
-
-Update or create a task for current authorized user with the specified `task_id`. Send a JSON dictionary of key-value pairs with valid keys: `id`, `title`, `description`, `due_by`. They key `id` should only be used for updating an existing task not creating a new one. _Requires Auth_.
-
-- Path Parameters:
-  - `user_id`: id of the user
+  - `list_id`: id of the task list
   - `task_id`: id of the task
 - Acceptable Request Content Types:
   - `application/json`
@@ -406,21 +403,20 @@ Update or create a task for current authorized user with the specified `task_id`
   - [`application/vnd.zv.task.pretty+json`](#applicationvndzvtaskprettyjson)
   - [`application/vnd.zv.task.full+json`](#applicationvndzvtaskfulljson)
 - Responses:
-  - `200`: Task updated
-  - `201`: Task created
+  - `200`: Existing task updated
+  - `201`: New task created
   - `204` (if `application/vnd.zv.empty` media type requested): Task created/updated
 
-#### `DELETE /zv/users/{user_id}/tasks/{task_id}`
+#### `DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`
 
-Remove a task for current authorized user. _Requires Auth_.
+Delete a task from task list.
 
 - Path Parameters:
   - `user_id`: id of the user
+  - `list_id`: id of the task list
   - `task_id`: id of the task
 - Responses:
-  - `204`: Task removed
-
- -->
+  - `204`: Task deleted
 
 ## Media Types
 
@@ -502,6 +498,8 @@ Each type might have different representations. Listed below are types, their va
 | description | string |  | More description for task |
 | created_at | datetime | ✔ | The date and time this task was created in UTC format. |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after `created_at`. |
+| comments | [`Comment`](#comment)[] | | A JSON array of comments |
+| tags | Object | | A JSON dictionary of key-value pairs(string to string). |
 
 #### `application/vnd.zv.task.pretty+json`
 
@@ -521,6 +519,7 @@ Each type might have different representations. Listed below are types, their va
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
 | description | string |  | More description for task |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after the time of making request. |
+| tags | Object | | A JSON dictionary of key-value pairs(string to string). |
 
 #### Comment
 
