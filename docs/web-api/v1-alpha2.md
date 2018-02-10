@@ -15,6 +15,10 @@
     - [`DELETE /zv/users/{user_id}`](#delete-zvusersuser_id)
     - [`GET    /zv/users/{user_id}/lists`](#get-zvusersuser_idlists)
     - [`POST   /zv/users/{user_id}/lists`](#post-zvusersuser_idlists)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}`](#get-zvusersuser_idlistslist_id)
+    - [`PATCH  /zv/users/{user_id}/lists/{list_id}`](#patch-zvusersuser_idlistslist_id)
+    - [`DELETE  /zv/users/{user_id}/lists/{list_id}`](#delete-zvusersuser_idlistslist_id)
+
 <!--
     - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
     - [`GET /zv/users/{user_id}/tasks/{task_id}`](#get-zvusersuser_idtaskstask_id)
@@ -26,6 +30,7 @@
   - [User](#user)
   - [Task](#task-list)
   - [Task](#task)
+  - [Comment](#comment)
   - [Error](#error)
   - [Miscellaneous](#miscelaneous)
 
@@ -37,7 +42,7 @@ This API is exposed to the clients through a number of endpoints accepting JSON 
 
 ### Authentication
 
-Clients can get a Base64 encoded token in login and register process. This token should be provided when necessary as HTTP basic authorization header in the form of `Authorization: Basic {token}`. Requests that require authentication(indicated by _Requires Auth_) and do not have this header, will result in a _401 Unauthorized_ response.
+Clients can get a Base64 encoded token in login and register process. This token should be provided when necessary as HTTP basic authorization header in the form of `Authorization: Basic {token}`. All request require this header unless otherwise noted. Requests that do not have this header, will result in a _401 Unauthorized_ response.
 
 ### Errors
 
@@ -66,7 +71,9 @@ Some Endpoints might accept more than one media types in request and return more
 
 #### `POST /zv/login`
 
-Retrieve an auth token
+Retrieve an auth token.
+
+> This request doesn't require `Authorization` header.
 
 - Acceptable Request Content Types:
   - [`application/vnd.zv.login.creation+json`](#applicationvndzvlogincreationjson)
@@ -78,7 +85,7 @@ Retrieve an auth token
 
 #### `POST /zv/logout`
 
-Revoke auth token. _Requires Auth_.
+Revoke auth token.
 
 - Responses:
   - `204`: Token is revoked
@@ -86,6 +93,8 @@ Revoke auth token. _Requires Auth_.
 #### `POST /zv/users`
 
 Create a new user
+
+> This request doesn't require `Authorization` header.
 
 - Acceptable Request Content Types:
   - [`application/vnd.zv.user.creation+json`](#applicationvndzvusercreationjson)
@@ -100,7 +109,7 @@ Create a new user
 
 #### `GET /zv/users/{user_id}`
 
-Get any user by ID. _Requires Auth_.
+Get any user by ID.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -112,7 +121,7 @@ Get any user by ID. _Requires Auth_.
 
 #### `PATCH /zv/users/{user_id}`
 
-Partially update current authorized user information. Send a JSON dictionary of key-value pairs with valid keys: `first_name` and `last_name`. _Requires Auth_.
+Partially update current authorized user information. Send a JSON dictionary of key-value pairs with valid keys: `first_name` and `last_name`.
 
 - Path Parameters:
   - `user_id`: id of the current authorized user
@@ -128,7 +137,7 @@ Partially update current authorized user information. Send a JSON dictionary of 
 
 #### `DELETE /zv/users/{user_id}`
 
-Remove current authorized user. _Requires Auth_.
+Remove current authorized user.
 
 - Path Parameters:
   - `user_id`: id of the current authorized user
@@ -137,7 +146,7 @@ Remove current authorized user. _Requires Auth_.
 
 #### `GET /zv/users/{user_id}/lists`
 
-Get all the task lists for current authorized user by ID. Response is a JSON array. _Requires Auth_.
+Get all the task lists for current authorized user by ID. Response is a JSON array.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -148,7 +157,7 @@ Get all the task lists for current authorized user by ID. Response is a JSON arr
 
 #### `POST /zv/users/{user_id}/lists`
 
-Create a new task list for current authorized user. _Requires Auth_.
+Create a new task list for current authorized user.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -161,9 +170,74 @@ Create a new task list for current authorized user. _Requires Auth_.
   - `201`: List created
   - `204` (if `application/vnd.zv.empty` media type requested): List created
 
+#### `GET /zv/users/{user_id}/lists/{list_id}`
+
+Get a task list by its id.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Expectable Response Media Types:
+  - [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson)
+- Responses:
+  - `200`
+
+#### `PATCH /zv/users/{user_id}/lists/{list_id}`
+
+Update a task list with the specified `list_id`. Send a JSON dictionary of key-value pairs with valid keys: `id`, `title`, `description`, and `tags`. Refer to [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson) for their descriptions.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Acceptable Request Content Types:
+  - `application/json`
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson)
+- Responses:
+  - `200`: Task list updated
+  - `201`: Task list created
+  - `204` (if `application/vnd.zv.empty` media type requested): Task list created/updated
+
+#### `DELETE /zv/users/{user_id}/lists/{list_id}`
+
+Remove a task list.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Responses:
+  - `204`: Task removed
+
+#### `GET /zv/users/{user_id}/lists/{list_id}/tags`
+
+Get all tags for a task list. Response is a JSON dictionary.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Expectable Response Media Types:
+  - `application/json`
+- Responses:
+  - `200`
+
+#### `POST /zv/users/{user_id}/lists/{list_id}/tags`
+
+Add new tags to task list. Send a JSON dictionary.
+
+> Duplicate tag names are not allowed.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Acceptable Request Content Types:
+  - `application/json`
+- Expectable Response Media Types:
+  - `application/json`
+- Responses:
+  - `201`: New tags are added to task list
+
 <!--
-
-
 #### `POST /zv/users/{user_id}/tasks`
 
 Create a new task for current authorized user. _Requires Auth_.
@@ -302,7 +376,8 @@ Each type might have different representations. Listed below are types, their va
 | title | string | ✔ | A title/summary for list. 140 characters max. |
 | description | string |  | More description for list |
 | created_at | datetime | ✔ | The date and time this task was created in UTC format. |
-| tags | Object | | A JSON dictionary of key-value pairs(string to string). |
+| comments | [`Comment`](#comment)[] | | A JSON array of comments |
+| tags | Object | | A JSON dictionary of tags in the form of key-value pairs(string to string) |
 
 #### `application/vnd.zv.list.creation+json`
 
@@ -343,6 +418,19 @@ Each type might have different representations. Listed below are types, their va
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
 | description | string |  | More description for task |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after the time of making request. |
+
+#### Comment
+
+#### `application/vnd.zv.comment.full+json`
+
+| Name  | Type | Required | Description |
+| -- | :--: | :--: | -- |
+| id | string | ✔ | Comment ID |
+| by | string | ✔ | User ID of comment poster |
+| posted_at | datetime | ✔ | The date and time this comment was posted |
+| last_modified_at | datetime | | The date and time this comment was modified. Present only when comment is _edited_ or _redacted_. |
+| text | string | ✔ | Text of the comment |
+| status | string | ✔ | "posted" by default. "edited" if comment text is modified. "redacted" if comment is deleted. |
 
 ### Error
 

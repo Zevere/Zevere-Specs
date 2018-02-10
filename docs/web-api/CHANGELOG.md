@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `/zv/users/{user_id}/lists` endpoint
-- `Task List` media types
+- Endpoint `/zv/users/{user_id}/lists`
+- Endpoint `/zv/users/{user_id}/lists/{list_id}`
+- Endpoint `/zv/users/{user_id}/lists/{list_id}/tags`
+- Media type `Task List`
+- Media type `Comment`
 
 ### Removed
 
