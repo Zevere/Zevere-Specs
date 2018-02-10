@@ -17,7 +17,12 @@
     - [`POST   /zv/users/{user_id}/lists`](#post-zvusersuser_idlists)
     - [`GET    /zv/users/{user_id}/lists/{list_id}`](#get-zvusersuser_idlistslist_id)
     - [`PATCH  /zv/users/{user_id}/lists/{list_id}`](#patch-zvusersuser_idlistslist_id)
-    - [`DELETE  /zv/users/{user_id}/lists/{list_id}`](#delete-zvusersuser_idlistslist_id)
+    - [`DELETE /zv/users/{user_id}/lists/{list_id}`](#delete-zvusersuser_idlistslist_id)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tags`](#get-zvusersuser_idlistslist_idtags)
+    - [`POST   /zv/users/{user_id}/lists/{list_id}/tags`](#post-zvusersuser_idlistslist_idtags)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`](#get-zvusersuser_idlistslist_idtagstag_name)
+    - [`PUT    /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`](#put-zvusersuser_idlistslist_idtagstag_name)
+    - [`DELETE /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`](#delete-zvusersuser_idlistslist_idtagstag_name)
 
 <!--
     - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
@@ -236,6 +241,44 @@ Add new tags to task list. Send a JSON dictionary.
   - `application/json`
 - Responses:
   - `201`: New tags are added to task list
+
+#### `GET /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`
+
+Get tag value for a task list by `tag_name`.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `tag_name`: name of the tag
+- Expectable Response Media Types:
+  - `text/plain`
+- Responses:
+  - `200`
+
+#### `PUT /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`
+
+Add new or update existing tag of a task list.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `tag_name`: name of the tag
+- Acceptable Request Content Types:
+  - `text/plain`
+- Responses:
+  - `200`: Existing tag updated
+  - `201`: New tag added
+
+#### `DELETE /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`
+
+Remove a tag on task list.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `tag_name`: name of the tag
+- Responses:
+  - `204`
 
 <!--
 #### `POST /zv/users/{user_id}/tasks`
