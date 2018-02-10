@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Endpoint `/zv/users/{user_id}/lists/{list_id}`
 - Endpoint `/zv/users/{user_id}/lists/{list_id}/tags`
 - Endpoint `/zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`
+- Endpoint `/zv/users/{user_id}/lists/{list_id}/comments`
+- Endpoint `/zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`
 - Media type `Task List`
 - Media type `Comment`
 

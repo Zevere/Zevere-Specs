@@ -23,6 +23,10 @@
     - [`GET    /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`](#get-zvusersuser_idlistslist_idtagstag_name)
     - [`PUT    /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`](#put-zvusersuser_idlistslist_idtagstag_name)
     - [`DELETE /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`](#delete-zvusersuser_idlistslist_idtagstag_name)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/comments`](#get-zvusersuser_idlistslist_idcomments)
+    - [`POST   /zv/users/{user_id}/lists/{list_id}/comments`](#post-zvusersuser_idlistslist_idcomments)
+    - [`PATCH  /zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`](#patch-zvusersuser_idlistslist_idcommentscomment_id)
+    - [`DELETE /zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`](#delete-zvusersuser_idlistslist_idcommentscomment_id)
 
 <!--
     - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
@@ -33,7 +37,7 @@
 - [Media Types](#media-types)
   - [Login](#login)
   - [User](#user)
-  - [Task](#task-list)
+  - [Task List](#task-list)
   - [Task](#task)
   - [Comment](#comment)
   - [Error](#error)
@@ -277,6 +281,62 @@ Remove a tag on task list.
   - `user_id`: id of the user
   - `list_id`: id of the task list
   - `tag_name`: name of the tag
+- Responses:
+  - `204`
+
+#### `GET /zv/users/{user_id}/lists/{list_id}/comments`
+
+Get all comments on a task list. Response is a JSON array of comment.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Expectable Response Media Types:
+  - [`application/vnd.zv.comment.full+json`](#applicationvndzvcommentfulljson)
+- Responses:
+  - `200`
+
+#### `POST /zv/users/{user_id}/lists/{list_id}/comments`
+
+Post a comment on task list.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+- Acceptable Request Content Types:
+  - `text/plain`
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.comment.full+json`](#applicationvndzvcommentfulljson)
+- Responses:
+  - `201`: Comment posted
+  - `204` (if `application/vnd.zv.empty` media type requested): Comment posted
+
+#### `PATCH /zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`
+
+Edit comment text
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `comment_id`: id of the comment
+- Acceptable Request Content Types:
+  - `text/plain`
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.comment.full+json`](#applicationvndzvcommentfulljson)
+- Responses:
+  - `200`: Comment text updated
+  - `204` (if `application/vnd.zv.empty` media type requested): Comment text updated
+
+#### `DELETE /zv/users/{user_id}/lists/{list_id}/comments/{comment_id}`
+
+Redact a comment
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `comment_id`: id of the comment
 - Responses:
   - `204`
 
