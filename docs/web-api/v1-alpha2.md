@@ -1,4 +1,4 @@
-# Zevere - RESTful Web API
+# Zevere - Web API Specifications
 
 - [Client-Server API](#client-server-api)
   - [Overview](#overview)
@@ -32,13 +32,15 @@
     - [`GET    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`](#get-zvusersuser_idlistslist_idtaskstask_id)
     - [`PUT    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`](#put-zvusersuser_idlistslist_idtaskstask_id)
     - [`DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}`](#delete-zvusersuser_idlistslist_idtaskstask_id)
-
-<!--
-    - [`HEAD /zv/users/{user_id}/tasks/{task_id}`](#head-zvusersuser_idtaskstask_id)
-    - [`GET /zv/users/{user_id}/tasks/{task_id}`](#get-zvusersuser_idtaskstask_id)
-    - [`PUT /zv/users/{user_id}/tasks/{task_id}`](#put-zvusersuser_idtaskstask_id)
-    - [`DELETE /zv/users/{user_id}/tasks/{task_id}`](#delete-zvusersuser_idtaskstask_id)
--->
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags`](#get-zvusersuser_idlistslist_idtaskstask_idtags)
+    - [`POST   /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags`](#post-zvusersuser_idlistslist_idtaskstask_idtags)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags/{tag_name}`](#get-zvusersuser_idlistslist_idtaskstask_idtagstag_name)
+    - [`PUT    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags/{tag_name}`](#put-zvusersuser_idlistslist_idtaskstask_idtagstag_name)
+    - [`DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags/{tag_name}`](#delete-zvusersuser_idlistslist_idtaskstask_idtagstag_name)
+    - [`GET    /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments`](#get-zvusersuser_idlistslist_idtaskstask_idcomments)
+    - [`POST   /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments`](#post-zvusersuser_idlistslist_idtaskstask_idcomments)
+    - [`PATCH  /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments/{comment_id}`](#patch-zvusersuser_idlistslist_idtaskstask_idcommentscomment_id)
+    - [`DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments/{comment_id}`](#delete-zvusersuser_idlistslist_idtaskstask_idcommentscomment_id)
 - [Media Types](#media-types)
   - [Login](#login)
   - [User](#user)
@@ -237,7 +239,7 @@ Get all tags for a task list. Response is a JSON dictionary.
 
 #### `POST /zv/users/{user_id}/lists/{list_id}/tags`
 
-Add new tags to task list. Send a JSON dictionary.
+Add new tags to task list. Send a JSON dictionary. Tag names are case sensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`.
 
 > Duplicate tag names are not allowed.
 
@@ -266,7 +268,7 @@ Get tag value for a task list by `tag_name`.
 
 #### `PUT /zv/users/{user_id}/lists/{list_id}/tags/{tag_name}`
 
-Add new or update existing tag of a task list.
+Add new or update existing tag of a task list. Tag names are case sensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -418,6 +420,137 @@ Delete a task from task list.
 - Responses:
   - `204`: Task deleted
 
+#### `GET /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags`
+
+Get all tags for a task. Response is a JSON dictionary.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+- Expectable Response Media Types:
+  - `application/json`
+- Responses:
+  - `200`
+
+#### `POST /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags`
+
+Add new tags to task. Send a JSON dictionary. Tag names are case sensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`.
+
+> Duplicate tag names are not allowed.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+- Acceptable Request Content Types:
+  - `application/json`
+- Expectable Response Media Types:
+  - `application/json`
+- Responses:
+  - `201`: New tags are added to task list
+
+#### `GET /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags/{tag_name}`
+
+Get tag value for a task by `tag_name`.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+  - `tag_name`: name of the tag
+- Expectable Response Media Types:
+  - `text/plain`
+- Responses:
+  - `200`
+
+#### `PUT /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags/{tag_name}`
+
+Add new or update existing tag of a task. Tag names are case sensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+  - `tag_name`: name of the tag
+- Acceptable Request Content Types:
+  - `text/plain`
+- Responses:
+  - `200`: Existing tag updated
+  - `201`: New tag added
+
+#### `DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/tags/{tag_name}`
+
+Remove a tag on task.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+  - `tag_name`: name of the tag
+- Responses:
+  - `204`
+
+#### `GET /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments`
+
+Get all comments on a task. Response is a JSON array of comment.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+- Expectable Response Media Types:
+  - [`application/vnd.zv.comment.full+json`](#applicationvndzvcommentfulljson)
+- Responses:
+  - `200`
+
+#### `POST /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments`
+
+Post a comment on task.
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+- Acceptable Request Content Types:
+  - `text/plain`
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.comment.full+json`](#applicationvndzvcommentfulljson)
+- Responses:
+  - `201`: Comment posted
+  - `204` (if `application/vnd.zv.empty` media type requested): Comment posted
+
+#### `PATCH /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments/{comment_id}`
+
+Edit comment text
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+  - `comment_id`: id of the comment
+- Acceptable Request Content Types:
+  - `text/plain`
+- Expectable Response Media Types:
+  - [`application/vnd.zv.empty`](#applicationvndzvempty)
+  - [`application/vnd.zv.comment.full+json`](#applicationvndzvcommentfulljson)
+- Responses:
+  - `200`: Comment text updated
+  - `204` (if `application/vnd.zv.empty` media type requested): Comment text updated
+
+#### `DELETE /zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments/{comment_id}`
+
+Redact a comment
+
+- Path Parameters:
+  - `user_id`: id of the user
+  - `list_id`: id of the task list
+  - `task_id`: id of the task
+  - `comment_id`: id of the comment
+- Responses:
+  - `204`
+
 ## Media Types
 
 Each type might have different representations. Listed below are types, their various representations, and their custom mime-type names.
@@ -428,7 +561,7 @@ Each type might have different representations. Listed below are types, their va
 
 | Name  | Type | Required | Description |
 | -- | :--: | :--: | -- |
-| user_name | string | ✔ | User name |
+| user_name | string | ✔ | User name. User names are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
 | passphrase | string | ✔ | passphrase |
 
 #### `application/vnd.zv.login.token+json`
