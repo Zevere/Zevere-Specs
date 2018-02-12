@@ -29,7 +29,8 @@ Here are some of them listed:
   - SQLite
   - Mongo
   - Cassandra
-  - Postgres XL
+  - Cockroach DB
+  - CouchDb (on Android)
 - IdentityServer
 - Presentation layer projects
   - Angular SPA

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Endpoint `/zv/users/{user_id}/team/{member_id}`
 - Endpoint `/zv/users/{user_id}/lists`
 - Endpoint `/zv/users/{user_id}/lists/{list_id}`
 - Endpoint `/zv/users/{user_id}/lists/{list_id}/tags`
@@ -21,8 +22,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Endpoint `/zv/users/{user_id}/lists/{list_id}/tasks/{task_id}/comments/{comment_id}`
 - Media type `Task List`
 - Media type `Comment`
+- Property `User.members` (creation)
+- Property `User.is_org` (pretty)
+- Property `User.team` (full)
 - Property `Task.tags`
 - Property `Task.comments`
+- `POST /zv/users` creates an organization
+- `PATCH /zv/users/{user_id}/lists/{list_id}` accepts `public` property
 
 ### Removed
 

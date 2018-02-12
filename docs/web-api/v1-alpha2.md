@@ -13,6 +13,8 @@
     - [`GET    /zv/users/{user_id}`](#get-zvusersuser_id)
     - [`PATCH  /zv/users/{user_id}`](#patch-zvusersuser_id)
     - [`DELETE /zv/users/{user_id}`](#delete-zvusersuser_id)
+    - [`POST   /zv/users/{user_id}/team/{member_id}`](#post-zvusersuser_idteammember_id)
+    - [`DELETE   /zv/users/{user_id}/team/{member_id}`](#delete-zvusersuser_idteammember_id)
     - [`GET    /zv/users/{user_id}/lists`](#get-zvusersuser_idlists)
     - [`POST   /zv/users/{user_id}/lists`](#post-zvusersuser_idlists)
     - [`GET    /zv/users/{user_id}/lists/{list_id}`](#get-zvusersuser_idlistslist_id)
@@ -108,9 +110,11 @@ Revoke auth token.
 
 #### `POST /zv/users`
 
-Create a new user
+Create a new user.
 
-> This request doesn't require `Authorization` header.
+If creating a _regular_, request doesn't require `Authorization` header.
+
+If creating an organization user, requires `Authorization` header. This means a user should already be logged in so he can create an organization.
 
 - Acceptable Request Content Types:
   - [`application/vnd.zv.user.creation+json`](#applicationvndzvusercreationjson)
@@ -160,6 +164,26 @@ Remove current authorized user.
 - Responses:
   - `204`: User removed
 
+#### `POST /zv/users/{user_id}/team/{member_id}`
+
+Add a member to an organization's team.
+
+- Path Parameters:
+  - `user_id`: id of the organization user
+  - `member_id`: id of a new member
+- Responses:
+  - `201`: New member added
+
+#### `DELETE /zv/users/{user_id}/team/{member_id}`
+
+Remove a member from an organization.
+
+- Path Parameters:
+  - `user_id`: id of the organization user
+  - `member_id`: id of a new member
+- Responses:
+  - `204`: Member removed
+
 #### `GET /zv/users/{user_id}/lists`
 
 Get all the task lists for current authorized user by ID. Response is a JSON array.
@@ -200,7 +224,7 @@ Get a task list by its id.
 
 #### `PATCH /zv/users/{user_id}/lists/{list_id}`
 
-Update a task list with the specified `list_id`. Send a JSON dictionary of key-value pairs with valid keys: `id`, `title`, `description`, and `tags`. Refer to [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson) for their descriptions.
+Update a task list with the specified `list_id`. Send a JSON dictionary of key-value pairs with valid keys: `id`, `title`, `description`, `public` and `tags`. Refer to [`application/vnd.zv.list.full+json`](#applicationvndzvlistfulljson) for their descriptions.
 
 - Path Parameters:
   - `user_id`: id of the user
@@ -578,8 +602,9 @@ Each type might have different representations. Listed below are types, their va
 | -- | :--: | :--: | -- |
 | id | string | ✔ | User's ID |
 | first_name | string | ✔ | User's first name |
-| last_name | string |  | User's last name |
 | joined_at | datetime | ✔ | The date account was created in UTC format. Time should be set to the midnight. |
+| last_name | string |  | User's last name |
+| team | string[] |  | If organization user, an array of members' user IDs |
 
 #### `application/vnd.zv.user.pretty+json`
 
@@ -588,6 +613,7 @@ Each type might have different representations. Listed below are types, their va
 | id | string | ✔ | User's ID |
 | display_name | string | ✔ | User's name that contains first name and optional last name appended with a space character. |
 | days_joined | number | ✔ | Number of days this user has joined. |
+| is_org | boolean | | Indicates whether this is an organization user |
 
 #### `application/vnd.zv.user.creation+json`
 
@@ -597,6 +623,7 @@ Each type might have different representations. Listed below are types, their va
 | passphrase | string | ✔ | Passphrase as clear text |
 | first_name | string | ✔ | User's first name |
 | last_name | string |  | User's last name |
+| members | string[] |  | If organization user, user ID of team members |
 
 ### Task List
 
@@ -606,17 +633,20 @@ Each type might have different representations. Listed below are types, their va
 | -- | :--: | :--: | -- |
 | id | string | ✔ | Task List's ID |
 | title | string | ✔ | A title/summary for list. 140 characters max. |
-| description | string |  | More description for list |
 | created_at | datetime | ✔ | The date and time this task was created in UTC format. |
-| comments | [`Comment`](#comment)[] | | A JSON array of comments |
+| description | string |  | More description for list |
+| owner | string | | User id of this task list's owner. Present only if current authorized user is not the owner.  |
+| public | boolean | | True if list is visible to every user and guest |
+| contributors | string[] | | User id of contributors to this task list |
+| comments | [`Comment`](#comment)[] | | A JSON array of comments for this task list |
 | tags | Object | | A JSON dictionary of tags in the form of key-value pairs(string to string) |
 
 #### `application/vnd.zv.list.creation+json`
 
 | Name  | Type | Required | Description |
 | -- | :--: | :--: | -- |
-| id | string | | Optional id for the task list. If not specified, server will generate one. IDs are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
 | title | string | ✔ | A title/summary for task list. Should be 140 characters or less. |
+| id | string | | Optional id for the task list. If not specified, server will generate one. IDs are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
 | description | string |  | More description for list |
 | tags | Object | | A JSON dictionary of key-value pairs(string to string). |
 
@@ -628,8 +658,8 @@ Each type might have different representations. Listed below are types, their va
 | -- | :--: | :--: | -- |
 | id | string | ✔ | Task's ID |
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
-| description | string |  | More description for task |
 | created_at | datetime | ✔ | The date and time this task was created in UTC format. |
+| description | string |  | More description for task |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after `created_at`. |
 | comments | [`Comment`](#comment)[] | | A JSON array of comments |
 | tags | Object | | A JSON dictionary of key-value pairs(string to string). |
@@ -640,16 +670,16 @@ Each type might have different representations. Listed below are types, their va
 | -- | :--: | :--: | -- |
 | id | string | ✔ | Task's ID |
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
-| description | string |  | More description for task |
 | is_due | boolean | ✔ | Whether task's due date and time is passed. |
+| description | string |  | More description for task |
 | due_in | string | | Only if `is_due` is false, contains a user readable representation of the time left such as `2 days 5 minutes`. |
 
 #### `application/vnd.zv.task.creation+json`
 
 | Name  | Type | Required | Description |
 | -- | :--: | :--: | -- |
-| id | string | | Optional id for the task. If not specified, server will generate one. IDs are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
 | title | string | ✔ | A title/summary for task. Should be 140 characters or less. |
+| id | string | | Optional id for the task. If not specified, server will generate one. IDs are case insensitive. Valid characters are _ASCII alphanumeric characters_, `_`, `.`, and `-`. |
 | description | string |  | More description for task |
 | due_by | datetime | | The date and time this task would be due. Should always be at least 60 seconds after the time of making request. |
 | tags | Object | | A JSON dictionary of key-value pairs(string to string). |
@@ -663,9 +693,9 @@ Each type might have different representations. Listed below are types, their va
 | id | string | ✔ | Comment ID |
 | by | string | ✔ | User ID of comment poster |
 | posted_at | datetime | ✔ | The date and time this comment was posted |
-| last_modified_at | datetime | | The date and time this comment was modified. Present only when comment is _edited_ or _redacted_. |
 | text | string | ✔ | Text of the comment |
 | status | string | ✔ | "posted" by default. "edited" if comment text is modified. "redacted" if comment is deleted. |
+| last_modified_at | datetime | | The date and time this comment was modified. Present only when comment is _edited_ or _redacted_. |
 
 ### Error
 
